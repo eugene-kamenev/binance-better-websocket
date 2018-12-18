@@ -1,0 +1,27 @@
+plugins {
+    id 'groovy'
+    id 'java'
+}
+
+ext['groovy.version'] = '2.5.4'
+
+group 'binance-java'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+def binanceClientVersion = "1.0.0"
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.5.4'
+    compile ("com.binance.api:binance-api-client:$binanceClientVersion")
+    compile 'org.asynchttpclient:async-http-client:2.6.0'
+    
+    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
