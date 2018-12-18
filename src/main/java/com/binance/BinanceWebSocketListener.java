@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-class BinanceWebSocketListener<T> implements WebSocketListener {
+public class BinanceWebSocketListener<T> implements WebSocketListener {
 
     private static final Logger log = LoggerFactory.getLogger(BinanceWebSocketListener.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -22,7 +22,7 @@ class BinanceWebSocketListener<T> implements WebSocketListener {
     private WebSocket current = null;
     private String wsName = null;
 
-    BinanceWebSocketListener(BinanceApiCallback<T> callback, Class <T> eventClass) {
+    public BinanceWebSocketListener(BinanceApiCallback<T> callback, Class <T> eventClass) {
         this.callback = callback;
         this.objectReader = MAPPER.readerFor(eventClass);
     }
