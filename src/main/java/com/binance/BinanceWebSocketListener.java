@@ -19,7 +19,8 @@ class BinanceWebSocketListener<T> implements WebSocketListener {
     private final ObjectReader objectReader;
     private final BinanceApiCallback<T> callback;
 
-    WebSocket current = null;
+    private WebSocket current = null;
+    private String wsName = null;
 
     BinanceWebSocketListener(BinanceApiCallback<T> callback, Class <T> eventClass) {
         this.callback = callback;
@@ -28,7 +29,7 @@ class BinanceWebSocketListener<T> implements WebSocketListener {
 
     @Override
     public void onPingFrame(byte[] payload) {
-        log.info("WebSocket " + current.toString() + " received ping, sending pong back..");
+        log.info("WebSocket " + wsName + " received ping, sending pong back..");
         this.current.sendPongFrame(payload);
     }
 
@@ -41,7 +42,7 @@ class BinanceWebSocketListener<T> implements WebSocketListener {
             T event = objectReader.readValue(payload);
             this.callback.onResponse(event);
         } catch (IOException ex) {
-            log.error("Error at WebSocket " + current.toString(), ex);
+            log.error("Error at WebSocket " + wsName, ex);
             throw new BinanceApiException(ex);
         }
     }
@@ -49,17 +50,22 @@ class BinanceWebSocketListener<T> implements WebSocketListener {
     @Override
     public void onOpen(WebSocket websocket) {
         this.current = websocket;
-        log.info("WebSocket " + current.toString() + " opened");
+        this.wsName = websocket.toString();
+        log.info("WebSocket " + wsName + " opened");
     }
 
     @Override
     public void onClose(WebSocket websocket, int code, String reason) {
-        log.info("WebSocket " + current.toString() + " was closed..");
+        log.info("WebSocket " + wsName + " was closed..");
     }
 
     @Override
     public void onError(Throwable t) {
-        log.error("Error at WebSocket " + current.toString(), t);
+        log.error("Error at WebSocket " + wsName, t);
+    }
+
+    public WebSocket getWebSocket() {
+        return this.current;
     }
 }
 
